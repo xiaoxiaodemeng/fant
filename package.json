@@ -1,0 +1,34 @@
+{
+  "name": "fant",
+  "version": "0.0.1",
+  "description": "vant在flutter上的复刻",
+  "repository": "https://github.com/xiaoxiaodemeng/fant.git",
+  "author": "咸鱼 <761153834@qq.com>",
+  "license": "MIT",
+  "scripts": {
+    "commit": "git add . && git-cz"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-customizable"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,vue,tsx}": []
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^13.1.0",
+    "@commitlint/config-conventional": "^13.1.0",
+    "commitizen": "^4.2.4",
+    "commitlint-config-cz": "^0.13.2",
+    "cz-customizable": "^6.3.0",
+    "husky": "^7.0.1",
+    "lint-staged": "^11.1.2"
+  }
+}

@@ -23,6 +23,10 @@ module.exports = {
             path: 'quickstart',
             title: '快速上手',
           },
+          {
+            path: 'updatelog',
+            title: '更新日志',
+          },
         ],
       },
       {
@@ -31,6 +35,10 @@ module.exports = {
           {
             path: 'button',
             title: 'Button 按钮',
+          },
+          {
+            path: 'cell',
+            title: 'Cell 单元格',
           },
         ],
       },

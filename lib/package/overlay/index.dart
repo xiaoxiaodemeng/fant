@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 
 import 'theme.dart';
 
+import '../transition/index.dart';
+
 /// 提供Overlay 模式
 ///
 /// 也提供覆盖widget模式, 但是必须提供container容器[存在尺寸]----会渲染container组件在原地
@@ -75,8 +77,6 @@ class FOverlay extends StatefulWidget {
 
 class _FOverlay extends State<FOverlay> with SingleTickerProviderStateMixin {
   bool _show = false;
-  late AnimationController controller;
-  late Animation<double> animation;
 
   /// 操作对象
   OverlayEntry? holder;
@@ -84,15 +84,6 @@ class _FOverlay extends State<FOverlay> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(vsync: this, duration: widget.duration);
-    animation = CurvedAnimation(parent: controller, curve: Curves.linear)
-      ..addListener(() {
-        /// 更新视图
-        if (this.mounted)
-          setState(() {
-            // the state that has changed here is the animation object’s value
-          });
-      });
 
     if (widget.show) {
       /// setState() or markNeedsBuild() called during build.错误解决办法
@@ -145,9 +136,6 @@ class _FOverlay extends State<FOverlay> with SingleTickerProviderStateMixin {
   }
 
   void open() {
-    /// 动画开始
-    controller.forward();
-
     if (widget.isCustom && !_show) {
       setState(() {
         _show = true;
@@ -161,9 +149,6 @@ class _FOverlay extends State<FOverlay> with SingleTickerProviderStateMixin {
   }
 
   void close() {
-    /// 逆向动画
-    controller.reverse();
-
     if (widget.isCustom && _show) {
       Future.delayed(
           widget.duration,
@@ -205,8 +190,10 @@ class _FOverlay extends State<FOverlay> with SingleTickerProviderStateMixin {
                   child: Listener(
                 behavior: HitTestBehavior.translucent,
                 onPointerUp: widget.onBackdropPress,
-                child: FadeTransition(
-                  opacity: animation,
+                child: FTransition(
+                  name: TransitionType.fade,
+                  duration: widget.duration,
+                  show: widget.show,
                   child: Container(
                     alignment: widget.alignment,
                     color: theme.overlayBackgroundColor(
@@ -215,7 +202,7 @@ class _FOverlay extends State<FOverlay> with SingleTickerProviderStateMixin {
                   ),
                 ),
               )),
-              if (widget.child is Widget) widget.child!
+              if (widget.child is Widget) widget.child!,
             ]));
   }
 
@@ -230,7 +217,7 @@ class _FOverlay extends State<FOverlay> with SingleTickerProviderStateMixin {
   void dispose() {
     /// 清除自身
     close();
-    controller.dispose();
+
     super.dispose();
   }
 
@@ -260,15 +247,18 @@ class _FOverlay extends State<FOverlay> with SingleTickerProviderStateMixin {
     /// 自定义不存在container将无意义
     if (widget.isCustom && widget.container != null) {
       current = Container(
+          clipBehavior: Clip.hardEdge,
+          decoration: BoxDecoration(),
           child: Stack(children: [
-        /// 这一块肯定需要渲染的
-        widget.container!,
+            /// 这一块肯定需要渲染的
+            widget.container!,
 
-        /// 渲染遮罩层
-        ///
-        /// 交给renderOverlay去判断显示
-        Positioned(left: 0, right: 0, top: 0, bottom: 0, child: renderOverlay)
-      ]));
+            /// 渲染遮罩层
+            ///
+            /// 交给renderOverlay去判断显示
+            Positioned(
+                left: 0, right: 0, top: 0, bottom: 0, child: renderOverlay)
+          ]));
     }
 
     return current;

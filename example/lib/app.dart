@@ -1,4 +1,5 @@
-import 'package:example/page/button.dart';
+// import 'package:example/page/button.dart';
+import 'package:example/page/cell.dart';
 import 'package:flutter/material.dart';
 
 import 'config/config.dart';
@@ -28,7 +29,7 @@ class _App extends State<App> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Material(
-        child: Button(),
+        child: Cell(),
       ),
     );
   }

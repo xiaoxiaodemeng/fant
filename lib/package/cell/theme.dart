@@ -40,6 +40,9 @@ class FCellTheme {
   /// cell label文字大小
   double get cellLabelFontSize => cell_label_font_size;
 
+  /// cell label具体title的距离
+  double get cellLabelTop => cell_label_margin_top;
+
   /// cell 主文字大小  大号
   double get cellLargeFontSize => cell_large_title_font_size;
 
@@ -55,6 +58,9 @@ class FCellTheme {
   double getLabelFontSize(bool large) {
     return large ? cellLargeLabelFontSize : cellLabelFontSize;
   }
+
+  /// 高度
+  double get cellHeight => cell_height;
 
   /// ICON的尺寸
   double get cellIconSize => cell_icon_size;

@@ -52,3 +52,4 @@ example/android/app/release
 
 # site
 site/node_modules
+node_modules

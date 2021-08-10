@@ -92,7 +92,7 @@ class FCell extends StatelessWidget {
       this.center = false,
       this.isRequired = false,
       this.isLink = false,
-      this.border = false,
+      this.border = true,
       this.titleStyle,
       this.arrowDirection = ArrowDirection.right,
       this.onTap,
@@ -136,17 +136,20 @@ class FCell extends StatelessWidget {
       /// 存在slot就直接被替换值了
       /// 空字符串只是帽子戏法
       label ?? '',
-      style: TextStyle(
-        color: style.cellLabelColor,
-        fontSize: style.getLabelFontSize(large),
-      ),
     );
     if (labelSlot != null) {
       temp = labelSlot!;
     }
 
     return Container(
-      child: temp,
+      margin: EdgeInsets.only(top: style.cellLabelTop),
+      child: DefaultTextStyle(
+        style: TextStyle(
+          color: style.cellLabelColor,
+          fontSize: style.getLabelFontSize(large),
+        ),
+        child: temp,
+      ),
     );
   }
 
@@ -160,12 +163,6 @@ class FCell extends StatelessWidget {
       /// 存在slot就直接被替换值了
       /// 空字符串只是帽子戏法
       title ?? '',
-
-      style: titleStyle ??
-          TextStyle(
-            color: style.cellTextColor,
-            fontSize: style.getFontSize(large),
-          ),
     );
     if (titleSlot != null) {
       temp = titleSlot!;
@@ -173,10 +170,18 @@ class FCell extends StatelessWidget {
 
     return Expanded(
         child: Container(
+      constraints: BoxConstraints(minHeight: style.cellHeight),
       alignment: Alignment.topLeft,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         // 渲染title
-        temp,
+        DefaultTextStyle(
+          style: titleStyle ??
+              TextStyle(
+                color: style.cellTextColor,
+                fontSize: style.getFontSize(large),
+              ),
+          child: temp,
+        ),
         // 渲染label
         if (isLabel) renderLabel(style)
       ]),
@@ -194,9 +199,6 @@ class FCell extends StatelessWidget {
       /// 空字符串只是帽子戏法
       value ?? '',
       textAlign: TextAlign.right,
-      style: TextStyle(
-          fontSize: style.getFontSize(large),
-          color: isTitle ? style.cellValueColor : style.cellTextColor),
     );
     if (valueSlot != null) {
       temp = valueSlot!;
@@ -207,8 +209,14 @@ class FCell extends StatelessWidget {
     /// value靠左
     return Expanded(
       child: Container(
+          constraints: BoxConstraints(minHeight: style.cellHeight),
           alignment: isTitle ? Alignment.topRight : Alignment.topLeft,
-          child: temp),
+          child: DefaultTextStyle(
+            style: TextStyle(
+                fontSize: style.getFontSize(large),
+                color: isTitle ? style.cellValueColor : style.cellTextColor),
+            child: temp,
+          )),
     );
   }
 
@@ -227,12 +235,15 @@ class FCell extends StatelessWidget {
     }
 
     return Container(
-        margin: EdgeInsets.only(right: style.marginSpace), child: temp);
+        constraints: BoxConstraints(minHeight: style.cellHeight),
+        margin: EdgeInsets.only(right: style.marginSpace),
+        child: temp);
   }
 
   /// 渲染星号
   Widget renderStar(FCellTheme style) {
     return Container(
+      constraints: BoxConstraints(minHeight: style.cellHeight),
       child: Text(
         '*',
         style: TextStyle(color: style.cellRequiredColor),
@@ -262,7 +273,9 @@ class FCell extends StatelessWidget {
     }
 
     return Container(
-        margin: EdgeInsets.only(left: style.marginSpace), child: temp);
+        constraints: BoxConstraints(minHeight: style.cellHeight),
+        margin: EdgeInsets.only(left: style.marginSpace),
+        child: temp);
   }
 
   @override

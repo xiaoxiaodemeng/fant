@@ -4,6 +4,7 @@ import 'theme.dart';
 import '../icon/index.dart';
 import '../icon/theme.dart';
 import '../overlay/index.dart';
+import '../transition/index.dart';
 
 enum PopupPosition { left, right, top, bottom, center }
 
@@ -131,9 +132,6 @@ class FPopup extends StatefulWidget {
 }
 
 class _FPopup extends State<FPopup> with SingleTickerProviderStateMixin {
-  late AnimationController controller;
-  late Animation<double> animation;
-
   /// icon是否高亮
   bool isHightColor = false;
 
@@ -141,6 +139,8 @@ class _FPopup extends State<FPopup> with SingleTickerProviderStateMixin {
   Widget renderContent(bool hideOverlay) {
     FPopupTheme theme = FPopupTheme();
 
+    /// 获取安全距离--设置关闭按钮位置
+    final MediaQueryData data = MediaQuery.of(widget.context);
     Widget child = Container(
         width: theme.getPosition(widget.position.index).width,
         height: theme.getPosition(widget.position.index).height,
@@ -156,7 +156,6 @@ class _FPopup extends State<FPopup> with SingleTickerProviderStateMixin {
           bottom: widget.position == PopupPosition.bottom,
           child: child);
     }
-
     return Material(
         color: Colors.transparent,
         child: Stack(children: [
@@ -213,9 +212,16 @@ class _FPopup extends State<FPopup> with SingleTickerProviderStateMixin {
                       right: theme
                           .getIconMargin(widget.closeIconPosition.index)
                           .right,
-                      top: theme
-                          .getIconMargin(widget.closeIconPosition.index)
-                          .top,
+
+                      /// 准确渲染关闭icon的位置
+                      top: widget.type == CoverScreen.dialog &&
+                              widget.position != PopupPosition.bottom &&
+                              widget.position != PopupPosition.center &&
+                              widget.useSafeArea
+                          ? data.padding.top
+                          : theme
+                              .getIconMargin(widget.closeIconPosition.index)
+                              .top,
                       bottom: theme
                           .getIconMargin(widget.closeIconPosition.index)
                           .bottom,
@@ -230,17 +236,6 @@ class _FPopup extends State<FPopup> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(vsync: this, duration: widget.duration);
-
-    final CurvedAnimation curve =
-        new CurvedAnimation(parent: controller, curve: Curves.easeIn);
-    animation = new Tween(begin: 0.0, end: 1.0).animate(curve)
-      ..addListener(() {
-        if (this.mounted)
-          setState(() {
-            // the state that has changed here is the animation object’s value
-          });
-      });
 
     if (widget.type == CoverScreen.overlay) return;
 
@@ -253,11 +248,20 @@ class _FPopup extends State<FPopup> with SingleTickerProviderStateMixin {
     }
   }
 
+  /// 获取配置
+  Map<PopupPosition, TransitionType> config = {
+    PopupPosition.bottom: TransitionType.slideDown,
+    PopupPosition.top: TransitionType.slideUp,
+    PopupPosition.left: TransitionType.slideLeft,
+    PopupPosition.right: TransitionType.slideRight,
+    PopupPosition.center: TransitionType.scale,
+  };
+
   @override
   void dispose() {
     /// 销毁
     close();
-    controller.dispose();
+
     super.dispose();
   }
 
@@ -281,7 +285,7 @@ class _FPopup extends State<FPopup> with SingleTickerProviderStateMixin {
     if (widget.type == CoverScreen.overlay) {
       /// https://stackoverflow.com/questions/62726872/flutter-delayed-animation-code-error-animationcontroller-forward-called-afte
       if (mounted) {
-        controller.forward();
+        ///
       }
     } else {
       return await Navigator.of(widget.context, rootNavigator: false)
@@ -292,32 +296,13 @@ class _FPopup extends State<FPopup> with SingleTickerProviderStateMixin {
   /// 关闭弹出层
   Future<void> close() async {
     if (widget.type == CoverScreen.overlay) {
-      controller.reverse();
+      ///
     } else {
       //// 本来是使用pop
       ///
       /// 但是看了ModalRoute后面的源码看到是使用了maybePop
       /// 会自动进行判断,如果当前页面 pop后,会显示其他页面,不会出现问题,则将执行当前页面的pop操作 否则将不执行
       Navigator.of(widget.context, rootNavigator: false).maybePop();
-    }
-  }
-
-  /// translationValues 平移量
-  ///
-  /// https://www.imooc.com/article/286924
-  Matrix4 getTranslation(double value) {
-    /// 数值其实可以代表速度 大代表需要更快的速度才能到达  小的话就可以慢点
-    switch (widget.position) {
-      case PopupPosition.bottom:
-        return Matrix4.translationValues(0.0, -value * 300, 0.0);
-      case PopupPosition.top:
-        return Matrix4.translationValues(0.0, value * 300, 0.0);
-      case PopupPosition.left:
-        return Matrix4.translationValues(value * 300, 0.0, 0.0);
-      case PopupPosition.right:
-        return Matrix4.translationValues(-value * 300, 0.0, 0.0);
-      default:
-        return Matrix4.diagonal3Values(1, 1, 1);
     }
   }
 
@@ -335,19 +320,17 @@ class _FPopup extends State<FPopup> with SingleTickerProviderStateMixin {
         transitionDuration: widget.duration,
         transitionBuilder: (BuildContext context, Animation<double> animation,
             Animation<double> secondaryAnimation, Widget child) {
-          /// 动画
-          final curvedValue =
-              widget.transition.transform(animation.value) - 1.0;
-
-          return Transform(
-            transform: getTranslation(curvedValue),
-            child: FadeTransition(
-              opacity: CurvedAnimation(
-                parent: animation,
-                curve: Curves.linear,
-              ),
-              child: child,
-            ),
+          return FTransition(
+            /// 居中不使用缩放动画
+            ///
+            /// 而是直接显示就好
+            name: config[widget.position] == TransitionType.scale
+                ? null
+                : config[widget.position],
+            show: widget.show,
+            transition: widget.transition,
+            duration: widget.duration,
+            child: child,
           );
         });
   }
@@ -397,8 +380,6 @@ class _FPopup extends State<FPopup> with SingleTickerProviderStateMixin {
     Widget? current = LimitedBox();
 
     if (widget.type == CoverScreen.overlay) {
-      /// 动画
-      final curvedValue = widget.transition.transform(animation.value) - 1;
       FPopupTheme theme = FPopupTheme();
       current = FOverlay(
         widget.context,
@@ -406,25 +387,30 @@ class _FPopup extends State<FPopup> with SingleTickerProviderStateMixin {
         isCustom: true,
         colorOpacity: theme.overlayOpacity,
         onBackdropPress: widget.onBackdropPress,
-        child: Transform(
-          transform: getTranslation(curvedValue),
-          child: FadeTransition(
-              opacity: CurvedAnimation(
-                parent: animation,
-                curve: Curves.linear,
-              ),
-              child: WillPopScope(
-                onWillPop: () async {
-                  /// 如果是false，就不会出栈，如果true就会出栈
-                  if (widget.onBackButtonPress != null && widget.show) {
-                    widget.onBackButtonPress!();
-                  }
+        child: FTransition(
+          /// 居中不使用缩放动画
+          ///
+          /// 而是直接显示就好
+          name: config[widget.position] == TransitionType.scale
+              ? null
+              : config[widget.position],
+          show: widget.show,
+          transition: widget.transition,
+          duration: widget.duration,
 
-                  /// 这种状态下根本就不存在栈给我出
-                  return false;
-                },
-                child: renderContent(false),
-              )),
+          /// 去除透明度
+          child: WillPopScope(
+            onWillPop: () async {
+              /// 如果是false，就不会出栈，如果true就会出栈
+              if (widget.onBackButtonPress != null && widget.show) {
+                widget.onBackButtonPress!();
+              }
+
+              /// 这种状态下根本就不存在栈给我出
+              return false;
+            },
+            child: renderContent(false),
+          ),
         ),
         container: widget.container,
       );

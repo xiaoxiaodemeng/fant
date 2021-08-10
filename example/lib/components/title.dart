@@ -4,12 +4,16 @@ class TitleBar extends StatelessWidget {
   /// 标题
   final String title;
 
-  TitleBar(this.title);
+  /// 是否需要左边边距
+  final bool isLeft;
+
+  TitleBar(this.title, {this.isLeft = false});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.only(top: 20, right: 16, bottom: 16),
+        padding: EdgeInsets.only(
+            top: 20, right: 16, bottom: 16, left: isLeft ? 16 : 0.0),
         child: Text(
           title,
           style: TextStyle(

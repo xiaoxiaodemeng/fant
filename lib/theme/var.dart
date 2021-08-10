@@ -69,8 +69,10 @@ const double line_height_md = 20;
 const double line_height_lg = 22;
 
 // Animation
-const animation_duration_base = 0.3;
-const animation_duration_fast = 0.2;
+const animation_duration_base = 300;
+const animation_duration_fast = 200;
+const animation_timing_function_enter = Curves.easeOut;
+const animation_timing_function_leave = Curves.easeIn;
 
 // Border
 const border_color = gray_3;

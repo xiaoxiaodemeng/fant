@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
             FOverlay(
               context,
               show: c,
-              isCustom: true,
+              // isCustom: true,
               color: Colors.brown,
               child: Container(
                 width: 100,
@@ -119,9 +119,10 @@ class _MyHomePageState extends State<MyHomePage> {
               context,
               show: b,
               round: true,
+              useSafeArea: true,
               closeable: true,
-              position: PopupPosition.bottom,
-              type: CoverScreen.overlay,
+              position: PopupPosition.top,
+              // type: CoverScreen.overlay,
               onBackButtonPress: () {
                 setState(() {
                   b = !b;
@@ -151,7 +152,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.deepPurple,
               ),
             ),
-
+            Container(
+              height: 500,
+            ),
             // Container(
             //   // width: ,
             //   child: FButton(

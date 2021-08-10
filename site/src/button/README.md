@@ -136,27 +136,27 @@ FButton("渐变色元素",
 
 ### Props
 
-| 参数         | 说明                                                  | 类型                | 默认值        |
-| ------------ | ----------------------------------------------------- | ------------------- | ------------- |
-| type         | 类型，可选值为 `primary` `success` `warning` `danger` | _FButtonType_       | `defaultType` |
-| size         | 尺寸，可选值为 `large` `small` `mini`                 | _FButtonSize_       | `normal`      |
-| color        | 按钮颜色                                              | _Color_             | -             |
-| gradient     | 支持传入该属性实现渐变色,优先级高于`color`            | _Gradient_          | -             |
-| icon         | 左侧图标名称,FantIcon提供了Icon组件的所有图标         | _IconData/FantIcon_ | -             |
-| url          | 左侧图标提供url链接**支持本地**                       | _String_            | -             |
-| iconPosition | 图标展示位置，可选值为 `right`                        | _IconPosition_      | `left`        |
-| block        | 是否为块级组件[占据整行]                              | _bool_              | `false`       |
-| plain        | 是否为朴素按钮                                        | _bool_              | `false`       |
-| square       | 是否为方形按钮                                        | _bool_              | `false`       |
-| round        | 是否为圆形按钮                                        | _bool_              | `false`       |
-| disabled     | 是否禁用按钮                                          | _bool_              | `false`       |
-| hairline     | 是否使用 0.5px 边框                                   | _bool_              | `false`       |
-| loading      | 是否显示为加载状态                                    | _bool_              | `false`       |
-| loadingText  | 加载状态提示文字                                      | _bool_              | `false`       |
-| loadingType  | 加载图标类型，可选值为 `spinner`                      | _LoadingType_       | `circular`    |
-| loadingSize  | 加载图标大小                                          | _double_            | `20`          |
-| switchActive | 水波纹[飞溅] 与  高亮切换[自制]                       | _FTapState_         | `highlighted` |
-| elevation    | 阴影                                                  | _double_            | `0.0`         |
+| 参数         | 说明                                                  | 类型                  | 默认值        |
+| ------------ | ----------------------------------------------------- | --------------------- | ------------- |
+| type         | 类型，可选值为 `primary` `success` `warning` `danger` | _FButtonType_         | `defaultType` |
+| size         | 尺寸，可选值为 `large` `small` `mini`                 | _FButtonSize_         | `normal`      |
+| color        | 按钮颜色                                              | _Color_               | -             |
+| gradient     | 支持传入该属性实现渐变色,优先级高于`color`            | _Gradient_            | -             |
+| icon         | 左侧图标名称,FantIcon提供了Icon组件的所有图标         | _IconData_ _FantIcon_ | -             |
+| url          | 左侧图标提供url链接**支持本地**                       | _String_              | -             |
+| iconPosition | 图标展示位置，可选值为 `right`                        | _IconPosition_        | `left`        |
+| block        | 是否为块级组件[占据整行]                              | _bool_                | `false`       |
+| plain        | 是否为朴素按钮                                        | _bool_                | `false`       |
+| square       | 是否为方形按钮                                        | _bool_                | `false`       |
+| round        | 是否为圆形按钮                                        | _bool_                | `false`       |
+| disabled     | 是否禁用按钮                                          | _bool_                | `false`       |
+| hairline     | 是否使用 0.5px 边框                                   | _bool_                | `false`       |
+| loading      | 是否显示为加载状态                                    | _bool_                | `false`       |
+| loadingText  | 加载状态提示文字                                      | _bool_                | `false`       |
+| loadingType  | 加载图标类型，可选值为 `spinner`                      | _LoadingType_         | `circular`    |
+| loadingSize  | 加载图标大小                                          | _double_              | `20`          |
+| switchActive | 水波纹[飞溅] 与  高亮切换[自制]                       | _FTapState_           | `highlighted` |
+| elevation    | 阴影                                                  | _double_              | `0.0`         |
 
 ### Events
 

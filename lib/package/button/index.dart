@@ -187,13 +187,6 @@ class FButton extends StatelessWidget {
           margin: textSpace(style),
           child: Text(
             textTemp,
-            style: TextStyle(
-                height: null,
-                fontSize: style.shapeStyle(size).fontSize,
-
-                /// 存在color颜色代表 背景被替换
-                color:
-                    plain ? getStyle(style).plainColor : getStyle(style).color),
           ));
     } else {
       return Container(margin: textSpace(style), child: textTemp);
@@ -320,6 +313,11 @@ class FButton extends StatelessWidget {
     return false;
   }
 
+  /// 是否可以高亮
+  bool get isCanHight {
+    return switchActive == FTapState.highlighted && !disabled && !loading;
+  }
+
   @override
   Widget build(BuildContext context) {
     /// 是否高亮
@@ -411,45 +409,57 @@ class FButton extends StatelessWidget {
 
                 /// 形体 + 样式
                 child: Container(
-                  height: theme.shapeStyle(size).height,
-                  padding: theme.shapeStyle(size).padding,
+                    height: theme.shapeStyle(size).height,
 
-                  /// 边框 + 渐变
-                  ///
-                  /// 装饰容器DecoratedBox
-                  decoration: BoxDecoration(
-                      color: switchActive == FTapState.highlighted &&
-                              isHightColor &&
-                              !disabled
-                          ? theme.baseMark
-                          : null,
-                      gradient: gradient,
-                      borderRadius: square
-                          ? BorderRadius.zero
-                          : BorderRadius.all(Radius.circular(round
-                              ? theme.borderRoundRadius
-                              : theme.borderRadius)),
-                      border: Border.all(
-                          color: getStyle(theme).borderColor,
-                          width: hairline
-                              ? getStyle(theme).borderWidth / 2
-                              : getStyle(theme).borderWidth)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    /// 边框 + 渐变
+                    ///
+                    /// 装饰容器DecoratedBox
+                    decoration: BoxDecoration(
+                        gradient: gradient,
+                        borderRadius: square
+                            ? BorderRadius.zero
+                            : BorderRadius.all(Radius.circular(round
+                                ? theme.borderRoundRadius
+                                : theme.borderRadius)),
+                        border: Border.all(
+                            color: getStyle(theme).borderColor,
+                            width: hairline
+                                ? getStyle(theme).borderWidth / 2
+                                : getStyle(theme).borderWidth)),
+                    child: ColoredBox(
+                        color: isCanHight && isHightColor
+                            ? theme.baseMark
+                            : Colors.transparent,
+                        child: Padding(
+                            padding: theme.shapeStyle(size).padding ??
+                                EdgeInsets.zero,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
 
-                    /// MainAxisSize.max 占满主轴
-                    mainAxisSize:
-                        size.toString() == 'FButtonSize.large' || block
-                            ? MainAxisSize.max
-                            : MainAxisSize.min,
-                    children: <Widget>[
-                      if (iconPosition == IconPosition.left) _renderIcon(theme),
-                      _renderText(theme),
-                      if (iconPosition == IconPosition.right)
-                        _renderIcon(theme),
-                    ],
-                  ),
-                ),
+                              /// MainAxisSize.max 占满主轴
+                              mainAxisSize:
+                                  size.toString() == 'FButtonSize.large' ||
+                                          block
+                                      ? MainAxisSize.max
+                                      : MainAxisSize.min,
+                              children: <Widget>[
+                                if (iconPosition == IconPosition.left)
+                                  _renderIcon(theme),
+                                DefaultTextStyle(
+                                  style: TextStyle(
+                                      height: null,
+                                      fontSize: theme.shapeStyle(size).fontSize,
+
+                                      /// 存在color颜色代表 背景被替换
+                                      color: plain
+                                          ? getStyle(theme).plainColor
+                                          : getStyle(theme).color),
+                                  child: _renderText(theme),
+                                ),
+                                if (iconPosition == IconPosition.right)
+                                  _renderIcon(theme),
+                              ],
+                            )))),
               );
             })));
   }
