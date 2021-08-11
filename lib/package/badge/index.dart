@@ -213,7 +213,8 @@ class _FBadge extends State<FBadge> {
     // 层叠组件
 
     /// wrap column 可自阻止Container 宽度撑满
-    return Stack(
+    return UnconstrainedBox(
+        child: Stack(
       clipBehavior: Clip.none,
       alignment: widget.alignment ?? AlignmentDirectional.center,
       children: <Widget>[
@@ -231,6 +232,6 @@ class _FBadge extends State<FBadge> {
             top: -theme.badgeSize / 2 + offsetY,
             child: renderBadge(theme))
       ],
-    );
+    ));
   }
 }

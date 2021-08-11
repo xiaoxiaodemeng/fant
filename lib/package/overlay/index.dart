@@ -96,10 +96,6 @@ class _FOverlay extends State<FOverlay> with SingleTickerProviderStateMixin {
       _show = widget.show;
       return;
     }
-
-    /// 底下是顶层Overlay判断
-
-    init();
   }
 
   @override
@@ -142,8 +138,15 @@ class _FOverlay extends State<FOverlay> with SingleTickerProviderStateMixin {
       });
     }
 
+    /// 不自定义的时候
+    if (!widget.isCustom && holder == null) {
+      /// 底下是顶层Overlay判断
+
+      init();
+    }
+
     /// 不启用自定义的时候
-    if (holder != null)
+    if (holder != null && !widget.isCustom)
       Future.delayed(
           Duration.zero, () => {Overlay.of(context)!.insert(holder!)});
   }
@@ -164,8 +167,11 @@ class _FOverlay extends State<FOverlay> with SingleTickerProviderStateMixin {
     }
 
     /// 不启用自定义的时候
-    if (holder != null) {
-      Future.delayed(widget.duration, () => {holder!.remove()});
+    if (holder != null && !widget.isCustom) {
+      Future.delayed(widget.duration, () {
+        holder!.remove();
+        holder = null;
+      });
     }
   }
 
@@ -257,7 +263,7 @@ class _FOverlay extends State<FOverlay> with SingleTickerProviderStateMixin {
             ///
             /// 交给renderOverlay去判断显示
             Positioned(
-                left: 0, right: 0, top: 0, bottom: 0, child: renderOverlay)
+                left: 0, right: 0, top: 0, bottom: 0, child: renderOverlay),
           ]));
     }
 

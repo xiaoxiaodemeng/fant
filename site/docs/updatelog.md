@@ -7,7 +7,15 @@
 ## 更新内容
 
 
+### v0.0.1
 
+- Bug Fixes
+  - 修复`FPopup`组件显示在中间的时候关闭按钮渲染问题(利用`UnconstrainedBox`解决)
+  - 修复`FOverlay`组件为重置成null的问题,导致`dispose`会再次执行`remove`而报错
+  - 修复`FOverlay`使用`Overlay`api未执行`insert`(插入),就执行了`remove`的问题
+  - 修复`FBadge`组件在`ListView`组件下渲染的问题
+- to-do
+  - 待定是否修改`FButton`的在ListView的行为(与上述`FBadge`一致)
 
 ### v0.0.1
 

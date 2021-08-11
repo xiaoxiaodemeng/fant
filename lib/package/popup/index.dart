@@ -141,6 +141,8 @@ class _FPopup extends State<FPopup> with SingleTickerProviderStateMixin {
 
     /// 获取安全距离--设置关闭按钮位置
     final MediaQueryData data = MediaQuery.of(widget.context);
+
+    /// 逻辑:是否提供安全距离
     Widget child = Container(
         width: theme.getPosition(widget.position.index).width,
         height: theme.getPosition(widget.position.index).height,
@@ -150,11 +152,53 @@ class _FPopup extends State<FPopup> with SingleTickerProviderStateMixin {
           child: widget.child,
         ));
 
+    /// 居中的时候套上限制
+    Widget content = Stack(children: [
+      Material(
+          borderRadius: !widget.round
+              ? BorderRadius.zero
+              : BorderRadius.only(
+                  topLeft:
+                      theme.getPosition(widget.position.index).topLeftRound,
+                  topRight:
+                      theme.getPosition(widget.position.index).topRightRound,
+                  bottomLeft:
+                      theme.getPosition(widget.position.index).bottomLeftRound,
+                  bottomRight: theme
+                      .getPosition(widget.position.index)
+                      .bottomRightRound),
+          type: widget.position == PopupPosition.center
+              ? MaterialType.transparency
+              : MaterialType.canvas,
+          color: widget.position == PopupPosition.center
+              ? Colors.transparent
+              : theme.popupBackgroundColor,
+          child: child),
+      if (widget.closeable)
+        Positioned(
+            right: theme.getIconMargin(widget.closeIconPosition.index).right,
+
+            /// 准确渲染关闭icon的位置
+            top: widget.type == CoverScreen.dialog &&
+                    widget.position != PopupPosition.bottom &&
+                    widget.position != PopupPosition.center &&
+                    widget.useSafeArea
+                ? data.padding.top
+                : theme.getIconMargin(widget.closeIconPosition.index).top,
+            bottom: theme.getIconMargin(widget.closeIconPosition.index).bottom,
+            left: theme.getIconMargin(widget.closeIconPosition.index).left,
+            child: renderCloseIcon()),
+    ]);
+
     if (widget.useSafeArea) {
       child = SafeArea(
           top: widget.position == PopupPosition.top,
           bottom: widget.position == PopupPosition.bottom,
           child: child);
+    }
+
+    if (widget.position == PopupPosition.center) {
+      content = UnconstrainedBox(child: content);
     }
     return Material(
         color: Colors.transparent,
@@ -183,53 +227,7 @@ class _FPopup extends State<FPopup> with SingleTickerProviderStateMixin {
               bottom: theme.getPosition(widget.position.index).bottom,
               left: theme.getPosition(widget.position.index).left,
               right: theme.getPosition(widget.position.index).right,
-              child: Stack(children: [
-                Material(
-                    borderRadius: !widget.round
-                        ? BorderRadius.zero
-                        : BorderRadius.only(
-                            topLeft: theme
-                                .getPosition(widget.position.index)
-                                .topLeftRound,
-                            topRight: theme
-                                .getPosition(widget.position.index)
-                                .topRightRound,
-                            bottomLeft: theme
-                                .getPosition(widget.position.index)
-                                .bottomLeftRound,
-                            bottomRight: theme
-                                .getPosition(widget.position.index)
-                                .bottomRightRound),
-                    type: widget.position == PopupPosition.center
-                        ? MaterialType.transparency
-                        : MaterialType.canvas,
-                    color: widget.position == PopupPosition.center
-                        ? Colors.transparent
-                        : theme.popupBackgroundColor,
-                    child: child),
-                if (widget.closeable)
-                  Positioned(
-                      right: theme
-                          .getIconMargin(widget.closeIconPosition.index)
-                          .right,
-
-                      /// 准确渲染关闭icon的位置
-                      top: widget.type == CoverScreen.dialog &&
-                              widget.position != PopupPosition.bottom &&
-                              widget.position != PopupPosition.center &&
-                              widget.useSafeArea
-                          ? data.padding.top
-                          : theme
-                              .getIconMargin(widget.closeIconPosition.index)
-                              .top,
-                      bottom: theme
-                          .getIconMargin(widget.closeIconPosition.index)
-                          .bottom,
-                      left: theme
-                          .getIconMargin(widget.closeIconPosition.index)
-                          .left,
-                      child: renderCloseIcon()),
-              ]))
+              child: content)
         ]));
   }
 

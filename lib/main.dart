@@ -72,14 +72,14 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
-        child: ListView(
+        child: Wrap(
           children: <Widget>[
             Material(
                 child: Center(
               child: ElevatedButton(
                   onPressed: () => {
                         setState(() {
-                          b = !b;
+                          c = !c;
                         })
                       },
                   child: Text('2222')),
@@ -121,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
               round: true,
               useSafeArea: true,
               closeable: true,
-              position: PopupPosition.top,
+              position: PopupPosition.center,
               // type: CoverScreen.overlay,
               onBackButtonPress: () {
                 setState(() {
@@ -135,10 +135,12 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               child: Container(
                   alignment: Alignment.center,
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    color: Colors.amberAccent,
+                  width: 200,
+                  height: 200,
+                  color: Colors.white,
+                  child: SizedBox(
+                    width: 50,
+                    height: 50,
                     child: ElevatedButton(
                         onPressed: () => {
                               setState(() {
@@ -153,8 +155,24 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Container(
-              height: 500,
-            ),
+                alignment: Alignment.center,
+                width: 200,
+                height: 200,
+                color: Colors.white,
+                child: SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: ElevatedButton(
+                      onPressed: () => {
+                            setState(() {
+                              b = !b;
+                            })
+                          },
+                      child: Text('222222222')),
+                )),
+            // Container(
+            //   height: 500,
+            // ),
             // Container(
             //   // width: ,
             //   child: FButton(
@@ -325,6 +343,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                 )),
+            Container(
+              height: 500,
+            ),
           ],
         ),
       ),
