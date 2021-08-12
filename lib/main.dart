@@ -7,6 +7,7 @@ import 'package:fant/package/icon/index.dart';
 import 'package:fant/package/icon/theme.dart';
 import 'package:fant/package/loading/icon/circle.dart';
 import 'package:fant/package/loading/index.dart';
+import 'package:fant/package/swiper_cell/index.dart';
 import 'package:flutter/material.dart';
 
 import 'package/loading/icon/ring.dart';
@@ -262,36 +263,38 @@ class _MyHomePageState extends State<MyHomePage> {
             //   size: 24,
             //   text: '加载中...',
             // ),
-
-            FCell(
-              key: key,
-              icon: FantIcon.add,
-              // center: true,
-              isRequired: true,
-              // rightSlot: Text('8h'),
-              // extraSlot: Text('8h'),
-              isLink: true,
-              onTap: () {
-                print((key.currentContext!.findRenderObject() as RenderBox)
-                    .localToGlobal(Offset.zero));
-                TestOverLay.show(
-                    context: context,
-                    view: Material(
-                        child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                      color: Colors.deepPurple.withAlpha(50),
-                      child: Text('1111'),
-                    )));
-              },
-              arrowDirection: ArrowDirection.down,
-              // clickable: false,
-              title:
-                  '1212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212',
-              value: '98',
-              // large: true,
-              label: "hhih",
+            FSwiperCell(
+              child: FCell(
+                key: key,
+                icon: FantIcon.add,
+                // center: true,
+                isRequired: true,
+                // rightSlot: Text('8h'),
+                // extraSlot: Text('8h'),
+                // isLink: true,
+                onTap: () {
+                  // print((key.currentContext!.findRenderObject() as RenderBox)
+                  //     .localToGlobal(Offset.zero));
+                  // TestOverLay.show(
+                  //     context: context,
+                  //     view: Material(
+                  //         child: Container(
+                  //       width: MediaQuery.of(context).size.width,
+                  //       height: MediaQuery.of(context).size.height,
+                  //       color: Colors.deepPurple.withAlpha(50),
+                  //       child: Text('1111'),
+                  //     )));
+                },
+                arrowDirection: ArrowDirection.down,
+                // clickable: false,
+                title:
+                    '1212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212',
+                value: '98',
+                // large: true,
+                label: "hhih",
+              ),
             ),
+
             Container(
               height: 30,
             ),
